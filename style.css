@@ -1,0 +1,1341 @@
+/* =========================================================
+   1. ТОКЕНЫ: цвета, радиусы, тени, тайминги
+   ========================================================= */
+
+:root {
+  /* Светлая тема */
+  --bg: #FDFBF7;
+  --surface: #FFFFFF;
+  --text: #4A423C;
+  /* #8A7F76 давал лишь 3.8–3.9:1 на --bg и --surface; #7B6F66 — 4.72 и 4.88:1 */
+  --text-muted: #7B6F66;
+  --accent: #E8B4B8;
+  --accent-2: #D9A441;
+  --neutral: #D8CFC4;
+
+  /* Цвет текста на заливке акцентом.
+     Переиспользует тёмный тон палитры (#1F1B19): на --accent даёт ~9:1,
+     на --accent-2 при hover ~7.6:1 — обе темы проходят AA с запасом. */
+  --on-accent: #1F1B19;
+
+  /* Ссылки подвала. Фон футера здесь --neutral (#D8CFC4), он тёмный,
+     поэтому текст нужен темнее предложенного #6B6058: тот даёт лишь 3.97:1.
+     #5F554D — 4.72:1, проходит AA. */
+  --footer-link: #5F554D;
+
+  /* Наведение в светлой теме: горчичный различим по тону, но по яркости
+     даёт всего 1.46:1 — подчёркивание и сдвиг здесь несут основную нагрузку */
+  --footer-link-hover: #D9A441;
+
+  /* Ссылка на неотложное состояние. Тот же тон, что у наведения, но глубже:
+     --accent-2 на --neutral давал 1.46:1, #7A4E0A даёт 4.67:1 */
+  --footer-urgent: #7A4E0A;
+
+  /* Радиусы */
+  --radius-card: 16px;
+  --radius-sm: 12px;
+  --radius-pill: 999px;
+
+  /* Мягкие тени малой интенсивности */
+  --shadow-sm: 0 1px 2px rgba(74, 66, 60, .05), 0 2px 8px rgba(74, 66, 60, .05);
+  --shadow-md: 0 2px 4px rgba(74, 66, 60, .06), 0 8px 20px rgba(74, 66, 60, .09);
+  --shadow-lg: 0 4px 8px rgba(74, 66, 60, .07), 0 14px 32px rgba(74, 66, 60, .12);
+
+  /* Движение */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur: 200ms;
+  --dur-ui: 180ms;      /* интерактивные элементы шапки и футера */
+  --dur-theme: 250ms;
+  --dur-reveal: 560ms;
+
+  /* Высота шапки — от неё считается отступ якорей */
+  --header-h: 76px;
+
+  /* Ритм */
+  --section-gap: clamp(3.5rem, 7vw, 6rem);
+}
+
+/* Тёмная тема — выбор пользователя (задаётся инлайн-скриптом в <head>) */
+:root[data-theme="dark"] {
+  --bg: #1F1B19;
+  --surface: #2A2422;
+  --text: #F0E8E0;
+  --text-muted: #B5AAA0;
+  --accent: #EFC2C6;
+  --accent-2: #E0AE52;
+  --neutral: #3A3230;
+
+  /* В тёмной теме подвал лежит на --surface: 8.46:1 */
+  --footer-link: #C9BFB6;
+  /* Тут розовый акцент читается отлично (9.6:1), менять его незачем */
+  --footer-link-hover: #EFC2C6;
+  /* На тёмном подвале горчичный и так даёт 7.53:1 */
+  --footer-urgent: #E0AE52;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .3), 0 2px 8px rgba(0, 0, 0, .25);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, .35), 0 8px 20px rgba(0, 0, 0, .35);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, .4), 0 14px 32px rgba(0, 0, 0, .45);
+}
+
+/* Резерв на случай отключённого JS: тема берётся из системной настройки */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1F1B19;
+    --surface: #2A2422;
+    --text: #F0E8E0;
+    --text-muted: #B5AAA0;
+    --accent: #EFC2C6;
+    --accent-2: #E0AE52;
+    --neutral: #3A3230;
+    --footer-link: #C9BFB6;
+    --footer-link-hover: #EFC2C6;
+    --footer-urgent: #E0AE52;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .3), 0 2px 8px rgba(0, 0, 0, .25);
+    --shadow-md: 0 2px 4px rgba(0, 0, 0, .35), 0 8px 20px rgba(0, 0, 0, .35);
+    --shadow-lg: 0 4px 8px rgba(0, 0, 0, .4), 0 14px 32px rgba(0, 0, 0, .45);
+  }
+}
+
+/* =========================================================
+   2. БАЗА И ТИПОГРАФИКА
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Заголовок секции не должен уезжать под липкую шапку */
+[data-nav-section] {
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  /* Плавная смена темы — только цвета, без transform */
+  transition: background-color var(--dur-theme) var(--ease),
+              color var(--dur-theme) var(--ease);
+}
+
+h1, h2, h3 {
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 .5em;
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.25rem); }
+h2 { font-size: clamp(1.625rem, 3.5vw, 2.25rem); }
+h3 { font-size: clamp(1.125rem, 2vw, 1.3125rem); font-weight: 500; }
+
+p {
+  margin: 0 0 1rem;
+  max-width: 68ch;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Единое видимое кольцо фокуса — не удалять */
+:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: .75rem 1.25rem;
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 0 0 var(--radius-sm) 0;
+  box-shadow: var(--shadow-md);
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* =========================================================
+   3. РАЗМЕТКА: контейнеры и секции
+   ========================================================= */
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+}
+
+.container--narrow {
+  max-width: 820px;
+}
+
+.section {
+  padding-block: var(--section-gap);
+}
+
+/* Вторичная секция на фоне --neutral */
+.section--alt {
+  background-color: var(--neutral);
+  transition: background-color var(--dur-theme) var(--ease);
+}
+
+.section__head {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.section__title {
+  margin-bottom: .35em;
+}
+
+.section__lead {
+  color: var(--text-muted);
+  font-size: 1.0625rem;
+}
+
+/* На фоне --neutral приглушённый текст даёт всего 2.55:1 (светлая тема),
+   поэтому здесь берём основной --text: 6.4:1, всё ещё из палитры. */
+.section--alt .section__lead {
+  color: var(--text);
+}
+
+/* Сетки карточек */
+.grid {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+/* 300px даёт ровно 3 колонки на контейнере 1200px — 6 карточек ложатся 3×2,
+   а не 4+2, как при меньшем минимуме */
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.grid--4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+
+/* =========================================================
+   4. ШАПКА
+   ========================================================= */
+
+/* Высота сентинела = порог прокрутки, после которого у шапки появляется тень */
+#scroll-sentinel {
+  position: absolute;
+  top: 0;
+  height: 40px;
+  width: 100%;
+  pointer-events: none;
+}
+
+/*
+  Раньше фон шапки был ровно --bg, то есть цвет страницы: до прокрутки шапка
+  визуально сливалась с контентом и держалась только на тени, которая
+  появлялась после 40px. Теперь её отделяет граница снизу — видна сразу.
+*/
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--bg);
+  border-bottom: 1px solid color-mix(in srgb, var(--neutral) 55%, transparent);
+  transition: background-color 200ms var(--ease),
+              border-color 200ms var(--ease),
+              box-shadow 200ms var(--ease);
+}
+
+/* Появляется после 40px прокрутки, класс ставит initHeaderShadow() */
+.header--scrolled {
+  background-color: var(--surface);
+  border-bottom-color: color-mix(in srgb, var(--neutral) 90%, transparent);
+  box-shadow: var(--shadow-md);
+}
+
+/*
+  Полупрозрачность включаем только там, где есть размытие: без backdrop-filter
+  сквозь шапку просто ехал бы неразмытый контент. Фолбэк — сплошной фон выше.
+*/
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .header {
+    background-color: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .header--scrolled {
+    background-color: color-mix(in srgb, var(--surface) 86%, transparent);
+  }
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: var(--header-h);
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-inline-start: auto;
+}
+
+/*
+  Десктоп: три колонки 1fr auto 1fr — меню стоит ровно по центру шапки
+  независимо от того, насколько широки логотип и кнопки справа.
+
+  Было иначе: margin-inline-start: auto висел и на .nav, и на .header__actions,
+  два auto-отступа делили свободное место пополам, и меню вставало не по центру
+  и не у края, а в случайной точке между ними — и переезжало при смене числа
+  пунктов. Само меню внутри осталось на flex с gap, так что число ссылок
+  по-прежнему нигде не зашито.
+*/
+@media (min-width: 769px) {
+  .header__inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  /* Без этого ссылка растянулась бы на всю колонку и кликом по пустому
+     месту слева уводила бы наверх */
+  .logo {
+    justify-self: start;
+  }
+
+  /* Колонки уже расставили всё сами — auto-отступы больше не нужны */
+  .nav {
+    margin-inline-start: 0;
+  }
+
+  .header__actions {
+    margin-inline-start: 0;
+    justify-self: end;
+  }
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: .625rem;
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/*
+  Знак вместо эмодзи 🐾: эмодзи рисовала система, поэтому на Windows, macOS
+  и Android логотип выглядел по-разному и не подчинялся палитре. Кружок взят
+  той же подачи, что у .card__icon.
+*/
+.logo__mark {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--accent);
+  color: var(--on-accent);
+  transition: background-color var(--dur) var(--ease),
+              transform var(--dur) var(--ease);
+}
+
+/* Лапа заливная, в отличие от контурных .icon по всему сайту */
+.logo__paw {
+  width: 1.1875rem;
+  height: 1.1875rem;
+  fill: currentColor;
+  stroke: none;
+}
+
+.logo:hover .logo__mark {
+  transform: rotate(-8deg);
+  background-color: var(--accent-2);
+}
+
+/* Раскладка на flex с gap — число пунктов нигде не зашито,
+   вёрстка одинаково работает и при 4, и при 8 ссылках */
+.nav {
+  margin-inline-start: auto;
+}
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: clamp(.75rem, 2vw, 1.75rem);
+}
+
+.nav__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: .9375rem;
+  font-weight: 500;
+  transition: color var(--dur-ui) var(--ease);
+}
+
+/* Подчёркивание «выезжает» слева направо */
+.nav__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: .35rem;
+  width: 100%;
+  height: 2px;
+  background-color: var(--accent-2);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-ui) var(--ease);
+}
+
+.nav__link:hover {
+  color: var(--accent-2);
+}
+
+.nav__link:hover::after,
+.nav__link--active::after {
+  transform: scaleX(1);
+}
+
+/* Активный пункт ставит initScrollSpy() — единственное место в коде */
+.nav__link--active {
+  color: var(--accent-2);
+}
+
+/* Бургер: только до 768px */
+.nav-toggle {
+  display: none;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--neutral);
+  border-radius: var(--radius-pill);
+  background-color: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: color var(--dur-ui) var(--ease),
+              border-color var(--dur-ui) var(--ease);
+}
+
+.nav-toggle:hover {
+  color: var(--accent-2);
+  border-color: var(--accent-2);
+}
+
+.icon--close { display: none; }
+
+[data-nav-toggle][aria-expanded="true"] .icon--burger { display: none; }
+[data-nav-toggle][aria-expanded="true"] .icon--close { display: block; }
+
+/* Переключатель темы */
+.theme-toggle {
+  flex-shrink: 0;
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--neutral);
+  border-radius: var(--radius-pill);
+  background-color: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              color var(--dur) var(--ease),
+              transform var(--dur) var(--ease);
+}
+
+.theme-toggle:hover {
+  color: var(--accent-2);
+  border-color: var(--accent-2);
+  transform: translateY(-2px);
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+}
+
+/* Показываем только актуальную иконку: солнце в тёмной теме, луну в светлой */
+.icon--sun { display: none; }
+.icon--moon { display: block; }
+
+:root[data-theme="dark"] .icon--sun { display: block; }
+:root[data-theme="dark"] .icon--moon { display: none; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .icon--sun { display: block; }
+  :root:not([data-theme="light"]) .icon--moon { display: none; }
+}
+
+/* Иконки — единый стиль контурных SVG */
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* =========================================================
+   5. КНОПКИ И ССЫЛКИ
+   ========================================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .8125rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease),
+              transform var(--dur) var(--ease);
+}
+
+.btn--primary {
+  background-color: var(--accent);
+  color: var(--on-accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--secondary {
+  background-color: transparent;
+  border-color: var(--neutral);
+  color: var(--text);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn--primary:hover,
+.btn--secondary:hover {
+  background-color: var(--accent-2);
+  border-color: var(--accent-2);
+  color: var(--on-accent);
+}
+
+/* Нажатие возвращает кнопку на место — чувствуется отклик */
+.btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Иконка внутри кнопки уезжает вперёд при наведении на кнопку */
+.btn__icon {
+  transition: transform var(--dur) var(--ease);
+}
+
+.btn:hover .btn__icon {
+  transform: translateX(3px);
+}
+
+/* Текстовая ссылка: подчёркивание раскрывается слева направо */
+.link {
+  color: var(--text);
+  text-decoration: none;
+  background-image: linear-gradient(var(--accent-2), var(--accent-2));
+  background-repeat: no-repeat;
+  background-position: left 100%;
+  background-size: 0% 2px;
+  transition: background-size var(--dur) var(--ease),
+              color var(--dur) var(--ease);
+}
+
+.link:hover {
+  color: var(--accent-2);
+  background-size: 100% 2px;
+}
+
+/* =========================================================
+   6. КАРТОЧКИ
+   ========================================================= */
+
+.card {
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  background-color: var(--surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--dur-theme) var(--ease),
+              box-shadow var(--dur) var(--ease),
+              transform var(--dur) var(--ease);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.card__title {
+  margin-bottom: .5rem;
+}
+
+.card__text {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: .9375rem;
+}
+
+/* Карточка с иконкой в кружке */
+.card__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--neutral);
+  color: var(--accent-2);
+  transition: background-color var(--dur) var(--ease);
+}
+
+.card--icon:hover .card__icon {
+  background-color: var(--accent);
+}
+
+.card__icon .icon {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+
+/* =========================================================
+   7. HERO
+   ========================================================= */
+
+.hero {
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+@media (min-width: 860px) {
+  .hero__inner {
+    grid-template-columns: 1.05fr .95fr;
+  }
+}
+
+.hero__eyebrow {
+  margin-bottom: .75rem;
+  color: var(--accent-2);
+  font-size: .875rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.hero__title {
+  margin-bottom: .5em;
+}
+
+.hero__subtitle {
+  color: var(--text-muted);
+  font-size: 1.0625rem;
+  margin-bottom: 2rem;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.hero__media {
+  position: relative;
+}
+
+.hero__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ---------------------------------------------------------
+   7.1 ИНТЕРАКТИВНОЕ ФОТО: «ПОГЛАДЬ МОПСА»
+
+   Ход жеста живёт в --pet-progress (0…1), её пишет JS — больше
+   он не трогает ни одного стиля. Всё оформление отсюда: и свечение,
+   и рамка — производные от этой переменной.
+   --------------------------------------------------------- */
+
+.pet {
+  --pet-progress: 0;
+
+  position: relative;
+  aspect-ratio: 1 / 1;
+  /* Скругляет углы обоим слоям сразу: у .pet есть рамка, и радиус
+     внутреннего края (16px − 2px) иначе пришлось бы держать вручную */
+  overflow: hidden;
+  border: 2px solid color-mix(in srgb, var(--accent-2) calc(15% + var(--pet-progress) * 85%), transparent);
+  border-radius: var(--radius-card);
+  /* Свечение идёт ПЕРВЫМ: в списке box-shadow первая тень рисуется поверх
+     остальных. В тёмной теме --shadow-lg почти чёрная и, стоя впереди,
+     съедала бы всё свечение. Длина списка постоянна — интерполяция без скачков. */
+  box-shadow:
+    0 0 calc(8px + 32px * var(--pet-progress))
+        calc(2px * var(--pet-progress))
+        color-mix(in srgb, var(--accent-2) calc(var(--pet-progress) * 70%), transparent),
+    var(--shadow-lg);
+  /* Жест горизонтальный: без этого палец уносит страницу вертикально */
+  touch-action: none;
+  /* 120ms сглаживают рывки мыши — на резких движениях рамка не мерцает */
+  transition: box-shadow 120ms linear,
+              border-color 120ms linear;
+}
+
+/* Финал: свечение гаснет за 400ms, дальше состояние не меняется */
+.pet--done {
+  transition: box-shadow 400ms var(--ease),
+              border-color 400ms var(--ease);
+}
+
+.pet__photo,
+.pet__video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/*
+  pointer-events снят со всех слоёв поверх фото намеренно: цель события
+  всегда .pet__photo, а её бокс совпадает с внутренним боксом .pet.
+  Значит offsetX/offsetY уже дают координату внутри зоны — и getBoundingClientRect
+  в обработчике движения не нужен вовсе.
+*/
+.pet__video {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms var(--ease);
+}
+
+.pet--done .pet__video {
+  opacity: 1;
+}
+
+/* Видео не загрузилось: остаётся фото, слой убираем совсем */
+.pet--no-video .pet__video {
+  display: none;
+}
+
+.pet__hint {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: .375rem .875rem;
+  /* Подложка лежит на фотографии: ниже 92% сквозь неё проступает светлое небо
+     и контраст текста уходит под AA. Полупрозрачность здесь — на грани допустимого */
+  background-color: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: var(--text);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms var(--ease);
+}
+
+.pet__hint.is-visible {
+  opacity: 1;
+}
+
+/*
+  Кнопка для клавиатуры: вне фокуса спрятана визуально, но остаётся
+  в порядке обхода. Проявляется только по :focus-visible — мышью её
+  не поймать, да и незачем: там работает жест.
+*/
+.pet__play {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  background-color: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: .9375rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pet__play:focus-visible {
+  width: auto;
+  height: auto;
+  min-height: 40px;
+  padding: .5rem 1.125rem;
+  overflow: visible;
+  clip-path: none;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-md);
+}
+
+/* =========================================================
+   8. ЗДОРОВЬЕ: выделенный блок
+   ========================================================= */
+
+.callout {
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  background-color: var(--neutral);
+  border-radius: var(--radius-card);
+  transition: background-color var(--dur-theme) var(--ease);
+}
+
+.callout__title {
+  display: flex;
+  align-items: center;
+  gap: .625rem;
+  margin-bottom: 1.25rem;
+}
+
+.callout__icon {
+  flex-shrink: 0;
+  color: var(--accent-2);
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.callout__list {
+  display: grid;
+  gap: .875rem;
+}
+
+.callout__list li {
+  padding: 1rem 1.25rem;
+  background-color: var(--surface);
+  border-radius: var(--radius-sm);
+  font-size: .9375rem;
+  color: var(--text-muted);
+  max-width: 68ch;
+  transition: background-color var(--dur-theme) var(--ease);
+}
+
+.callout__list strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* Тот же случай: сноска лежит на --neutral, приглушённый цвет не проходит AA */
+.callout__note {
+  margin: 1.5rem 0 0;
+  color: var(--text);
+  font-size: .8125rem;
+}
+
+/* =========================================================
+   9. ГАЛЕРЕЯ
+   ========================================================= */
+
+/* Фиксированное число колонок вместо auto-fill: 6 фотографий должны делиться
+   нацело, иначе последний ряд остаётся с одиночным снимком */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(.75rem, 1.5vw, 1.25rem);
+}
+
+@media (min-width: 640px) {
+  .gallery {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gallery__item {
+  margin: 0;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--dur) var(--ease),
+              transform var(--dur) var(--ease);
+}
+
+.gallery__item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.gallery__item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+/* =========================================================
+   10. FAQ (аккордеон на <details>)
+   ========================================================= */
+
+.faq {
+  display: grid;
+  gap: .75rem;
+}
+
+.faq__item {
+  background-color: var(--surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: background-color var(--dur-theme) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+
+.faq__item:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.125rem clamp(1rem, 2.5vw, 1.5rem);
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+  transition: color var(--dur) var(--ease);
+}
+
+/* Убираем стандартный треугольник у <summary> */
+.faq__question::-webkit-details-marker { display: none; }
+.faq__question::marker { content: ''; }
+
+.faq__question:hover {
+  color: var(--accent-2);
+}
+
+.faq__chevron {
+  flex-shrink: 0;
+  color: var(--accent-2);
+  transition: transform var(--dur) var(--ease);
+}
+
+.faq__item[open] .faq__chevron {
+  transform: rotate(180deg);
+}
+
+/* Высотой управляет script.js — здесь только переход */
+.faq__body {
+  overflow: hidden;
+  transition: height 220ms var(--ease);
+}
+
+.faq__body-inner {
+  padding: 0 clamp(1rem, 2.5vw, 1.5rem) 1.25rem;
+}
+
+.faq__body-inner p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: .9375rem;
+}
+
+/* =========================================================
+   11. ФУТЕР
+   ========================================================= */
+
+.footer {
+  padding: 56px 0 24px;
+  background-color: var(--neutral);
+  border-top: 1px solid var(--neutral);
+  transition: background-color var(--dur-theme) var(--ease),
+              border-color var(--dur-theme) var(--ease);
+}
+
+/* В тёмной теме подвал светлее фона, а не темнее */
+:root[data-theme="dark"] .footer {
+  background-color: var(--surface);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .footer {
+    background-color: var(--surface);
+  }
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .footer__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* третья колонка уходит на всю ширину под первые две */
+  .footer__col--wide {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .footer__col--wide {
+    grid-column: auto;
+  }
+}
+
+/* Тот же случай, что и у копирайта: на фоне --neutral приглушённый
+   текст даёт 3.17:1, поэтому берём подвальный токен — 4.72:1 */
+.footer__text {
+  margin: 1rem 0 .75rem;
+  color: var(--footer-link);
+  font-size: 15px;
+}
+
+.footer__contact {
+  margin: 0;
+}
+
+.footer__title {
+  margin: 0;
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.footer__list {
+  display: grid;
+  gap: 4px;
+  margin-top: .5rem;
+}
+
+.footer__link {
+  display: inline-flex;
+  align-items: center;
+  gap: .375rem;
+  min-height: 40px;
+  color: var(--footer-link);
+  font-size: 15px;
+  text-decoration: none;
+  /* text-decoration намеренно не в списке: подчёркивание включается мгновенно */
+  transition: color var(--dur-ui) var(--ease),
+              transform var(--dur-ui) var(--ease);
+}
+
+.footer__link:hover,
+.footer__link:focus-visible {
+  color: var(--footer-link-hover);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  /* 4px обязательны: иначе линия режет выносные элементы у, р, ц, д, щ */
+  text-underline-offset: 4px;
+  text-decoration-color: currentColor;
+  transform: translateX(3px);
+}
+
+/* Ссылка на признаки неотложного состояния — выделена цветом и иконкой */
+.footer__link--urgent {
+  color: var(--footer-urgent);
+  font-weight: 500;
+}
+
+/* Общий hover красит в --footer-link-hover (1.46:1) — для этой ссылки это
+   вернуло бы ровно ту проблему, которую чиним. Оставляем свой цвет,
+   наведение читается по подчёркиванию и сдвигу. */
+.footer__link--urgent:hover,
+.footer__link--urgent:focus-visible {
+  color: var(--footer-urgent);
+}
+
+.footer__urgent-icon {
+  width: 1.0625rem;
+  height: 1.0625rem;
+  flex-shrink: 0;
+}
+
+/* --- Аккордеон колонок 2 и 3 (только до 768px) --- */
+
+.footer__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
+}
+
+.footer__summary::-webkit-details-marker { display: none; }
+.footer__summary::marker { content: ''; }
+
+.footer__chevron {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 200ms var(--ease);
+}
+
+.footer__group[open] .footer__chevron {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 768px) {
+  .footer__summary {
+    min-height: 48px;
+    cursor: pointer;
+  }
+
+  .footer__group {
+    border-top: 1px solid var(--neutral);
+  }
+}
+
+/* Выше 768px аккордеона нет: содержимое всегда открыто (открывает
+   initFooterAccordion()), а summary выглядит обычным заголовком */
+@media (min-width: 769px) {
+  .footer__summary {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .footer__chevron {
+    display: none;
+  }
+}
+
+/* --- Нижняя полоса --- */
+
+.footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--neutral);
+  transition: border-color var(--dur-theme) var(--ease);
+}
+
+/* --text-muted здесь лежал бы на --neutral и давал 3.17:1;
+   --footer-link настроен под этот фон — 4.72:1 */
+.footer__copy {
+  margin: 0;
+  font-size: 14px;
+  color: var(--footer-link);
+}
+
+/* Дисклеймер намеренно не приглушённый — он должен читаться */
+.footer__disclaimer {
+  margin: 0;
+  max-width: 420px;
+  padding-left: 12px;
+  border-left: 3px solid var(--accent-2);
+  font-size: 14px;
+  color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+/* =========================================================
+   12. ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ
+   Скрываем только при работающем JS (класс .js на <html>),
+   иначе без скриптов страница осталась бы пустой.
+   opacity/transform не влияют на поток — высота страницы не прыгает.
+   ========================================================= */
+
+.js .reveal,
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--dur-reveal) ease-out,
+              transform var(--dur-reveal) ease-out;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js .reveal.is-visible,
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* =========================================================
+   13. АДАПТИВ (360px → 1440px)
+   ========================================================= */
+
+/* До 768px навигация превращается в выезжающую сверху панель */
+@media (max-width: 768px) {
+  :root {
+    --header-h: 64px;
+  }
+
+  .nav-toggle {
+    display: inline-grid;
+  }
+
+  .nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-inline-start: 0;
+    padding: .5rem clamp(1rem, 4vw, 2.5rem) 1.25rem;
+    background-color: var(--surface);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transform: translateY(-8px);
+    visibility: hidden;
+    /* visibility снимается только после затухания, иначе панель мигает */
+    transition: opacity 220ms var(--ease),
+                transform 220ms var(--ease),
+                visibility 0s linear 220ms;
+  }
+
+  /* При открытии visibility включается мгновенно (0s без задержки):
+     невидимый элемент нельзя сфокусировать, а фокус уходит на первый пункт
+     сразу в обработчике клика */
+  .nav.is-open {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    transition: opacity 220ms var(--ease),
+                transform 220ms var(--ease),
+                visibility 0s;
+  }
+
+  .nav__list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .nav__link {
+    min-height: 48px;
+    font-size: 20px;
+  }
+
+  /* Выезжающее подчёркивание неуместно в вертикальном списке */
+  .nav__link::after {
+    display: none;
+  }
+
+  /* Страница под открытым меню не прокручивается */
+  body.nav-open {
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero__actions .btn {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   14. ПОНИЖЕННАЯ ПОДВИЖНОСТЬ
+   Контент показываем сразу, transform-анимации выключаем.
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .js .reveal,
+  .js [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .btn:hover,
+  .card:hover,
+  .gallery__item:hover,
+  .theme-toggle:hover,
+  .logo:hover .logo__mark,
+  .footer__link:hover,
+  .footer__link:focus-visible {
+    transform: none !important;
+  }
+
+  .nav {
+    transition: none !important;
+  }
+
+  /* Жест «погладь мопса» выключен целиком: остаётся статичное фото.
+     Видео и клавиатурная альтернатива к нему тоже не нужны — JS сюда
+     не заходит и слушателей не вешает. */
+  .pet__video,
+  .pet__hint,
+  .pet__play {
+    display: none !important;
+  }
+
+  .pet {
+    border-color: transparent !important;
+    box-shadow: var(--shadow-lg) !important;
+  }
+}
