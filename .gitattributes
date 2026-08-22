@@ -5,4 +5,5 @@
 # Бинарники не трогать
 *.jpg binary
 *.png binary
+*.avif binary
 *.mp4 binary

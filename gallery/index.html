@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Галерея мопсов: окрасы, маска, щенки — Мопсомания</title>
+  <meta name="description" content="Как выглядят мопсы: палевый, абрикосовый, серебристый и чёрный окрасы, маска на морде, щенки и взрослые собаки.">
+
+  <!-- Инлайновый favicon: без него браузер стучится за /favicon.ico и ловит 404.
+       Та же лапа, что в логотипе, — эмодзи рисовала система, и знак в шапке
+       и на вкладке выглядели по-разному. Решётки в цветах экранированы как %23. -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='12' fill='%23E8B4B8'/><g fill='%231F1B19'><ellipse cx='6.5' cy='10.6' rx='2.15' ry='2.75'/><ellipse cx='10.4' cy='7.3' rx='2.25' ry='2.95'/><ellipse cx='14.9' cy='7.5' rx='2.2' ry='2.9'/><ellipse cx='18.5' cy='11' rx='2.05' ry='2.6'/><ellipse cx='12.4' cy='16.8' rx='5.3' ry='4.3'/></g></svg>">
+
+  <!-- Шрифты: Fredoka для заголовков, Inter для текста -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../style.css">
+
+  <!--
+    Тема применяется ДО первой отрисовки, иначе при загрузке будет вспышка
+    светлой темы. Класс .js помечает, что скрипты работают: анимации появления
+    и мобильная навигация прячут контент только в этом случае, иначе без JS
+    страница осталась бы пустой, а на мобильном — ещё и без меню.
+
+    Ключ localStorage с префиксом: на GitHub Pages origin вида логин.github.io
+    общий для всех репозиториев владельца, и голое 'theme' столкнулось бы
+    с любым соседним проектом на том же домене. Ключ общий для всех страниц.
+  -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js');
+      var theme = 'light';
+      try {
+        var saved = localStorage.getItem('mopsomania:theme');
+        if (saved === 'light' || saved === 'dark') {
+          theme = saved;
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          theme = 'dark';
+        }
+      } catch (e) {
+        /* localStorage недоступен (приватный режим) — остаётся светлая тема */
+      }
+      root.setAttribute('data-theme', theme);
+    })();
+  </script>
+</head>
+<body data-page="gallery">
+  <a class="skip-link" href="#main">Перейти к основному содержимому</a>
+
+  <!-- Сентинел высотой 40px: пока он в зоне видимости, прокрутка меньше порога -->
+  <div id="scroll-sentinel" aria-hidden="true"></div>
+
+  <!-- ============ ШАПКА ============ -->
+  <header class="header" id="header" role="banner">
+    <div class="container header__inner">
+      <a class="logo" href="../">
+        <span class="logo__mark" aria-hidden="true">
+          <svg class="logo__paw" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
+                    <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                    <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                    <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                    <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+          </svg>
+        </span>
+        <span>Мопсомания</span>
+      </a>
+
+      <!--
+        Связь пункта с разделом держится только на data-nav-link ↔ data-page
+        у <body>. href по-прежнему нигде не разбирается: переезд с якорей
+        на пути не потребовал правок ни в CSS, ни в логике подсветки.
+      -->
+      <nav class="nav" id="primary-nav" aria-label="Основная навигация">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="../about/" data-nav-link="about">О породе</a></li>
+          <li><a class="nav__link" href="../choose/" data-nav-link="choose">Выбор</a></li>
+          <li><a class="nav__link" href="../care/" data-nav-link="care">Уход</a></li>
+          <li><a class="nav__link" href="../health/" data-nav-link="health">Здоровье</a></li>
+          <li><a class="nav__link" href="../gallery/" data-nav-link="gallery">Галерея</a></li>
+        </ul>
+      </nav>
+
+      <div class="header__actions">
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Включить тёмную тему" aria-pressed="false">
+          <svg class="icon icon--sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="4.5"/>
+            <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/>
+          </svg>
+          <svg class="icon icon--moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>
+          </svg>
+        </button>
+
+        <button class="nav-toggle" type="button" data-nav-toggle
+                aria-label="Открыть меню" aria-expanded="false" aria-controls="primary-nav">
+          <svg class="icon icon--burger" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M4 7h16M4 12h16M4 17h16"/>
+          </svg>
+          <svg class="icon icon--close" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="section section--page">
+      <div class="container">
+
+        <!-- ============ ХЛЕБНЫЕ КРОШКИ ============ -->
+        <nav class="breadcrumbs" aria-label="Хлебные крошки">
+          <ol class="breadcrumbs__list">
+            <li class="breadcrumbs__item">
+              <a class="breadcrumbs__link" href="../">Главная</a>
+              <svg class="icon breadcrumbs__sep" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M9 6l6 6-6 6"/>
+              </svg>
+            </li>
+            <li class="breadcrumbs__item">
+              <span class="breadcrumbs__current" aria-current="page">Галерея</span>
+            </li>
+          </ol>
+        </nav>
+
+        <header class="page-head">
+          <h1 class="page-head__title reveal">Галерея</h1>
+          <p class="page-head__lead reveal">
+            Мопсы бывают палевыми, абрикосовыми, серебристыми и чёрными — но выражение морды
+            у всех одинаково внимательное.
+          </p>
+        </header>
+
+        <!-- ============ КОРОТКО ============
+             Ответ за десять секунд: прочитавший только этот блок уже знает
+             главное по теме страницы и сам решает, читать ли дальше. -->
+        <aside class="brief reveal">
+          <h2 class="brief__title">Коротко</h2>
+          <ul class="brief__list">
+            <li class="brief__item">
+              <svg class="brief__paw" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
+                <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+              </svg>
+              <span>Стандарт признаёт четыре окраса: палевый, абрикосовый, серебристый и чёрный.</span>
+            </li>
+            <li class="brief__item">
+              <svg class="brief__paw" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
+                <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+              </svg>
+              <span>У всех светлых окрасов обязательна маска — резко очерченная тёмная морда и тёмные уши.</span>
+            </li>
+            <li class="brief__item">
+              <svg class="brief__paw" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
+                <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+              </svg>
+              <span>По спине от затылка к хвосту идёт «ремень» — узкая тёмная полоса вдоль позвоночника.</span>
+            </li>
+            <li class="brief__item">
+              <svg class="brief__paw" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
+                <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+              </svg>
+              <span>У чёрных мопсов ни маска, ни ремень не различимы: собака однотонная.</span>
+            </li>
+            <li class="brief__item">
+              <svg class="brief__paw" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
+                <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+              </svg>
+              <span>Белые отметины стандартом не допускаются, размытая маска считается недостатком.</span>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- ============ ОГЛАВЛЕНИЕ СТРАНИЦЫ ============
+             Блок скрывается сам, если пунктов меньше четырёх. -->
+        <nav class="toc reveal" aria-label="Содержание страницы">
+          <h2 class="toc__title">На этой странице</h2>
+          <ul class="toc__list">
+            <li class="toc__item"><a class="toc__link" href="#photos">Фотографии</a></li>
+            <li class="toc__item"><a class="toc__link" href="#faq">Частые вопросы</a></li>
+          </ul>
+        </nav>
+
+      </div>
+    </section>
+
+    <!-- ============ ФОТОГРАФИИ ============ -->
+    <section class="section">
+      <div class="container">
+        <h2 id="photos">Фотографии</h2>
+        <!-- Порядок не случайный: сначала восемь палевых, затем четыре чёрных —
+             окрасы читаются группами. Всего двенадцать: число должно делиться
+             и на 2, и на 3, иначе в последнем ряду останется одиночный кадр. -->
+        <div class="gallery" data-stagger>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-fawn-1.avif" alt="Палевый мопс сидит на белом покрывале, тёмная маска на морде" width="1941" height="2553" loading="lazy">
+          </figure>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-fawn-2.avif" alt="Палевый мопс в коралловой попоне сидит на светлом фоне" width="687" height="1031" loading="lazy">
+          </figure>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-fawn-3.avif" alt="Портрет палевого мопса на розовом фоне: уши подняты, глаза широко раскрыты" width="880" height="880" loading="lazy">
+          </figure>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-fawn-4.avif" alt="Палевый мопс лежит на полу, положив морду на вытянутые лапы" width="1469" height="981" loading="lazy">
+          </figure>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-fawn-5.avif" alt="Палевый мопс во дворе у деревянной лестницы смотрит снизу вверх" width="725" height="990" loading="lazy">
+          </figure>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-fawn-6.avif" alt="Палевый мопс тянется из синей лежанки, снят сверху" width="687" height="1031" loading="lazy">
+          </figure>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-fawn-7.avif" alt="Крупный план морды палевого мопса с наклонённой головой" width="880" height="880" loading="lazy">
+          </figure>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-fawn-8.avif" alt="Палевый мопс в полный рост на летней лужайке" width="735" height="981" loading="lazy">
+          </figure>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-black-1.avif" alt="Чёрный мопс наклонил голову, чёрно-белый снимок на светлом фоне" width="735" height="980" loading="lazy">
+          </figure>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-black-2.avif" alt="Чёрный мопс в полосатой одежде на красном фоне, портрет в три четверти" width="749" height="968" loading="lazy">
+          </figure>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-black-3.avif" alt="Чёрный мопс, завёрнутый в белое полотенце после купания" width="754" height="963" loading="lazy">
+          </figure>
+          <figure class="gallery__item reveal">
+            <img src="../assets/mops/pug-black-4.avif" alt="Чёрный мопс на брусчатке смотрит вверх, пасть приоткрыта" width="735" height="980" loading="lazy">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ЧАСТЫЕ ВОПРОСЫ ============ -->
+    <section class="section section--alt">
+      <div class="container">
+        <h2 id="faq">Частые вопросы</h2>
+        <div class="faq">
+          <details class="faq__item" open>
+            <summary class="faq__question">
+              Какие бывают окрасы мопсов?
+              <svg class="icon faq__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M6 9.5l6 6 6-6"/>
+              </svg>
+            </summary>
+            <div class="faq__body">
+              <div class="faq__body-inner">
+                <p>
+                  Стандарт признаёт четыре: палевый, абрикосовый, серебристый и чёрный. У всех светлых
+                  окрасов обязательна маска — резко очерченная тёмная морда, переходящая в тёмные уши.
+                  Чем чётче граница маски, тем выше её ценят.
+                </p>
+                <p>
+                  По спине от затылка к хвосту идёт «ремень» — узкая тёмная полоса вдоль позвоночника,
+                  а на лбу часто есть тёмное ромбовидное пятно. У чёрных мопсов ни маска, ни ремень
+                  не различимы: собака однотонная.
+                </p>
+                <p>
+                  Белые отметины стандартом не допускаются, а размытая маска у светлых собак считается
+                  недостатком. На окрас ни характер, ни здоровье не завязаны — это чисто внешний признак.
+                </p>
+              </div>
+            </div>
+          </details>
+
+          <details class="faq__item" open>
+            <summary class="faq__question">
+              Чем отличается палевый мопс от абрикосового?
+              <svg class="icon faq__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M6 9.5l6 6 6-6"/>
+              </svg>
+            </summary>
+            <div class="faq__body">
+              <div class="faq__body-inner">
+                <p>
+                  Разница только в оттенке основного тона, и заметна она в основном при сравнении двух
+                  собак рядом. Палевый — светлый песочный, ближе к соломенному; абрикосовый — теплее
+                  и глубже, с рыжеватым подтоном.
+                </p>
+                <p>
+                  Всё остальное совпадает: маска и ремень обязательны у обоих, сложение и характер
+                  от оттенка не зависят. На здоровье окрас тоже не влияет.
+                </p>
+                <p>
+                  На фотографиях оттенок сильно зависит от освещения, поэтому по снимку окрас определяют
+                  неуверенно даже заводчики. В документах его записывают по осмотру собаки, а не по фото.
+                </p>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <!-- ============ ЧИТАЙТЕ ТАКЖЕ ============ -->
+        <section class="related">
+          <h2 class="related__title reveal">Читайте также</h2>
+          <div class="teasers teasers--related" data-stagger>
+          <article class="teaser reveal">
+            <span class="teaser__icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" focusable="false">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M7.5 9.5c1.6 1.1 3.4 1.1 5 0M6.5 13c2 1.4 5 1.4 7 0M9 16.8c1.6.8 3.4.8 5 0"/>
+              </svg>
+            </span>
+            <h3 class="teaser__title">
+              <a class="teaser__link" href="../about/">О породе</a>
+            </h3>
+            <p class="teaser__text">Мопсы выведены в Китае более двух тысяч лет назад как собаки-компаньоны — и с тех пор их главная работа не изменилась.</p>
+            <span class="teaser__more" aria-hidden="true">
+              Подробнее
+              <svg class="icon teaser__arrow" viewBox="0 0 24 24" focusable="false">
+                <path d="M5 12h13M13 6l6 6-6 6"/>
+              </svg>
+            </span>
+          </article>
+          <article class="teaser reveal">
+            <span class="teaser__icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" focusable="false">
+                <rect x="4.5" y="3.5" width="15" height="17" rx="2"/>
+                <path d="M8 9.2l1.6 1.6 3.2-3.4M8 15.7l1.6 1.6 3.2-3.4"/>
+              </svg>
+            </span>
+            <h3 class="teaser__title">
+              <a class="teaser__link" href="../choose/">Выбор</a>
+            </h3>
+            <p class="teaser__text">Честный разбор: кому мопс подойдёт, кому противопоказан, сколько стоит содержание и где брать щенка.</p>
+            <span class="teaser__more" aria-hidden="true">
+              Подробнее
+              <svg class="icon teaser__arrow" viewBox="0 0 24 24" focusable="false">
+                <path d="M5 12h13M13 6l6 6-6 6"/>
+              </svg>
+            </span>
+          </article>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ ФУТЕР ============ -->
+  <footer class="footer" role="contentinfo" data-reveal>
+    <div class="container">
+      <div class="footer__grid" data-stagger>
+
+        <!-- Колонка 1: о проекте. На мобильных не сворачивается -->
+        <div class="footer__col reveal">
+          <a class="logo" href="../">
+            <span class="logo__mark" aria-hidden="true">
+              <svg class="logo__paw" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
+                        <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                        <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                        <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                        <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+              </svg>
+            </span>
+            <span>Мопсомания</span>
+          </a>
+          <p class="footer__text">
+            Справочник о мопсах: уход, здоровье и особенности породы. Для тех, кто уже живёт
+            с мопсом или только присматривается к нему.
+          </p>
+          <p class="footer__contact">
+            <a class="footer__link" href="mailto:hello@mopsomania.ru">hello@mopsomania.ru</a>
+          </p>
+        </div>
+
+        <!--
+          Колонки 2 и 3: до 768px это нативный аккордеон, выше — обычные заголовки.
+          open стоит в разметке, а не ставится из JS: без скриптов колонки должны
+          быть раскрыты, иначе девять ссылок подвала недостижимы. Сворачивает их
+          на мобильном initFooterAccordion().
+        -->
+        <details class="footer__col footer__group reveal" data-footer-accordion open>
+          <summary class="footer__summary">
+            <h3 class="footer__title">Разделы</h3>
+            <svg class="icon footer__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M6 9.5l6 6 6-6"/>
+            </svg>
+          </summary>
+          <ul class="footer__list">
+            <li><a class="footer__link" href="../about/" data-nav-link="about">О породе</a></li>
+            <li><a class="footer__link" href="../choose/" data-nav-link="choose">Выбор</a></li>
+            <li><a class="footer__link" href="../care/" data-nav-link="care">Уход</a></li>
+            <li><a class="footer__link" href="../health/" data-nav-link="health">Здоровье</a></li>
+            <li><a class="footer__link" href="../gallery/" data-nav-link="gallery">Галерея</a></li>
+          </ul>
+        </details>
+
+        <details class="footer__col footer__group footer__col--wide reveal" data-footer-accordion open>
+          <summary class="footer__summary">
+            <h3 class="footer__title">Полезное</h3>
+            <svg class="icon footer__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M6 9.5l6 6 6-6"/>
+            </svg>
+          </summary>
+          <ul class="footer__list">
+            <li><a class="footer__link" href="../care/#checklist">Чек-лист по уходу</a></li>
+            <li><a class="footer__link" href="../health/#vaccination">Календарь прививок</a></li>
+            <li><a class="footer__link" href="../care/#heat">Мопс в жару</a></li>
+            <li>
+              <a class="footer__link footer__link--urgent" href="../health/#emergency">
+                <svg class="icon footer__urgent-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 7.5v5M12 16v.5"/>
+                </svg>
+                Когда срочно к врачу
+              </a>
+            </li>
+          </ul>
+        </details>
+
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2026 Мопсомания</p>
+        <p class="footer__disclaimer">
+          Материалы носят информационный характер и не заменяют очную консультацию
+          ветеринарного врача.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мопсы — всё о породе: характер, уход и здоровье</title>
-  <meta name="description" content="Подробно о мопсах: характер породы, ежедневный уход, особенности здоровья брахицефалов, галерея и ответы на частые вопросы.">
+  <title>Мопсы — всё о породе: подойдёт ли вам мопс, уход и здоровье</title>
+  <meta name="description" content="Подробно о мопсах: кому порода подходит и кому нет, характер, ежедневный уход, особенности здоровья брахицефалов и галерея.">
 
   <!-- Инлайновый favicon: без него браузер стучится за /favicon.ico и ловит 404.
        Та же лапа, что в логотипе, — эмодзи рисовала система, и знак в шапке
@@ -21,7 +21,12 @@
   <!--
     Тема применяется ДО первой отрисовки, иначе при загрузке будет вспышка
     светлой темы. Класс .js помечает, что скрипты работают: анимации появления
-    прячут контент только в этом случае, иначе без JS страница осталась бы пустой.
+    и мобильная навигация прячут контент только в этом случае, иначе без JS
+    страница осталась бы пустой, а на мобильном — ещё и без меню.
+
+    Ключ localStorage с префиксом: на GitHub Pages origin вида логин.github.io
+    общий для всех репозиториев владельца, и голое 'theme' столкнулось бы
+    с любым соседним проектом на том же домене. Ключ общий для всех страниц.
   -->
   <script>
     (function () {
@@ -29,7 +34,7 @@
       root.classList.add('js');
       var theme = 'light';
       try {
-        var saved = localStorage.getItem('theme');
+        var saved = localStorage.getItem('mopsomania:theme');
         if (saved === 'light' || saved === 'dark') {
           theme = saved;
         } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -42,7 +47,7 @@
     })();
   </script>
 </head>
-<body>
+<body data-page="home">
   <a class="skip-link" href="#main">Перейти к основному содержимому</a>
 
   <!-- Сентинел высотой 40px: пока он в зоне видимости, прокрутка меньше порога -->
@@ -51,31 +56,31 @@
   <!-- ============ ШАПКА ============ -->
   <header class="header" id="header" role="banner">
     <div class="container header__inner">
-      <a class="logo" href="#top">
+      <a class="logo" href="./">
         <span class="logo__mark" aria-hidden="true">
           <svg class="logo__paw" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
-            <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
-            <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
-            <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
-            <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+                    <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                    <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                    <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                    <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
           </svg>
         </span>
         <span>Мопсомания</span>
       </a>
 
       <!--
-        Связь пункта с секцией держится только на data-nav-link ↔ data-nav-section.
-        href нигде не разбирается, поэтому замена якорей на пути (#care → /care/)
-        не потребует правок ни в CSS, ни в JS.
+        Связь пункта с разделом держится только на data-nav-link ↔ data-page
+        у <body>. href по-прежнему нигде не разбирается: переезд с якорей
+        на пути не потребовал правок ни в CSS, ни в логике подсветки.
       -->
       <nav class="nav" id="primary-nav" aria-label="Основная навигация">
         <ul class="nav__list">
-          <li><a class="nav__link" href="#about" data-nav-link="about">О породе</a></li>
-          <li><a class="nav__link" href="#care" data-nav-link="care">Уход</a></li>
-          <li><a class="nav__link" href="#health" data-nav-link="health">Здоровье</a></li>
-          <li><a class="nav__link" href="#gallery" data-nav-link="gallery">Галерея</a></li>
-          <li><a class="nav__link" href="#faq" data-nav-link="faq">Вопросы</a></li>
+          <li><a class="nav__link" href="about/" data-nav-link="about">О породе</a></li>
+          <li><a class="nav__link" href="choose/" data-nav-link="choose">Выбор</a></li>
+          <li><a class="nav__link" href="care/" data-nav-link="care">Уход</a></li>
+          <li><a class="nav__link" href="health/" data-nav-link="health">Здоровье</a></li>
+          <li><a class="nav__link" href="gallery/" data-nav-link="gallery">Галерея</a></li>
         </ul>
       </nav>
 
@@ -112,17 +117,17 @@
           <p class="hero__eyebrow">Порода с характером</p>
           <h1 class="hero__title">Мопс — маленькая собака с огромным сердцем</h1>
           <p class="hero__subtitle">
-            Спокойный компаньон для дома и семьи. Рассказываем, как ухаживать за складками,
-            что важно знать о дыхании брахицефалов и почему мопсу нельзя перегреваться.
+            Спокойный компаньон для дома и семьи. Рассказываем, кому мопс подойдёт,
+            а кому нет, как ухаживать за складками и почему брахицефалу нельзя перегреваться.
           </p>
           <div class="hero__actions">
-            <a class="btn btn--primary" href="#care">
-              Как ухаживать
+            <a class="btn btn--primary" href="choose/">
+              Подойдёт ли вам мопс
               <svg class="icon btn__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="M5 12h13M13 6l6 6-6 6"/>
               </svg>
             </a>
-            <a class="btn btn--secondary" href="#gallery">Смотреть галерею</a>
+            <a class="btn btn--secondary" href="gallery/">Смотреть галерею</a>
           </div>
         </div>
 
@@ -133,358 +138,250 @@
           блока — правится здесь, без захода в JS.
         -->
         <div class="hero__media reveal">
-          <div class="pet" data-pet
+          <!-- tabindex="-1": принимает фокус программно, когда клавиатурная
+               кнопка отработала и прячется. В обход табуляции не попадает. -->
+          <div class="pet" data-pet tabindex="-1"
                data-zone-x="38" data-zone-y="20" data-zone-w="60" data-zone-h="75">
             <img class="pet__photo" src="assets/mops/pug-sad.jpg"
                  alt="Мопс смотрит в окно машины под дождём"
                  width="1067" height="1080">
 
-            <!-- Ни loop, ни controls: видео играет один раз и замирает на последнем кадре -->
+            <!-- Ни loop, ни controls: видео играет один раз и замирает на последнем кадре.
+                 poster — то же фото, что лежит слоем ниже: оно совпадает с первым кадром,
+                 поэтому пока ролик не буферизовался, слой не проступает пустым. -->
             <video class="pet__video" data-pet-video src="assets/mops/pug-happy.mp4"
+                   poster="assets/mops/pug-sad.jpg"
                    muted playsinline preload="auto" aria-hidden="true"></video>
 
             <!-- Подсказка про жест бесполезна для скринридера: ему адресована кнопка ниже -->
             <div class="pet__hint" data-pet-hint aria-hidden="true">Погладьте мопса</div>
 
             <!-- Клавиатурная альтернатива жесту: скрыта, пока не получит фокус -->
-            <button class="pet__play" type="button" data-pet-play>Показать</button>
+            <button class="pet__play" type="button" data-pet-play>Показать, как мопс радуется</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ О ПОРОДЕ ============ -->
-    <section class="section" id="about" data-nav-section="about">
+    <!-- ============ ЗАЯВКА ============
+         Единственная форма на сайте. Стоит сразу за hero, а не перед подвалом,
+         по чередованию фонов: hero лежит на --bg, и вставка --alt сюда ничего
+         не сдвигает, тогда как блок в конце перевернул бы фоны всех секций
+         главной (чередование раскладывается ОТ КОНЦА, см. docs/rhythm.md).
+
+         Отправку целиком ведёт initLeadForm(); без скриптов вместо формы
+         показывается адрес почты (.lead-fallback). -->
+    <section class="section section--alt">
       <div class="container">
-        <header class="section__head reveal">
-          <h2 class="section__title">О породе</h2>
-          <p class="section__lead">
-            Мопсы выведены в Китае более двух тысяч лет назад как собаки-компаньоны —
-            и с тех пор их главная работа не изменилась.
+        <div class="tool reveal">
+          <p class="tool__badge">Заявка</p>
+          <h2 class="tool__title" id="contact">Остались вопросы о породе?</h2>
+          <p class="tool__lead">Оставьте имя и телефон — перезвоним и спокойно разберём, подойдёт ли вам мопс. Без рассылок и звонков с предложениями.</p>
+
+          <form class="lead" data-lead-form novalidate>
+            <div class="lead__fields">
+              <div class="lead__field">
+                <label class="lead__label" for="lead-name">Имя</label>
+                <!--
+                  aria-describedby стоит в разметке и ссылается на пустой абзац:
+                  связь должна существовать до первой проверки, добавлять её
+                  вместе с текстом ошибки поздно. Пустой абзац гасится в CSS
+                  через :empty и места не занимает.
+                -->
+                <input class="lead__input" id="lead-name" name="name" type="text"
+                       required autocomplete="name" aria-describedby="lead-name-error">
+                <p class="lead__error" id="lead-name-error"></p>
+              </div>
+
+              <div class="lead__field">
+                <label class="lead__label" for="lead-phone">Телефон</label>
+                <input class="lead__input" id="lead-phone" name="phone" type="tel"
+                       required autocomplete="tel" aria-describedby="lead-phone-error">
+                <p class="lead__error" id="lead-phone-error"></p>
+              </div>
+            </div>
+
+            <!-- Ловушка для ботов: в обход табуляции поле не попадает,
+                 автозаполнение выключено, для скринридера скрыто. Заполнено —
+                 отправку молча пропускаем. Позиционирование инлайном намеренно:
+                 поле обязано уехать за экран даже если стили не загрузились. -->
+            <input type="text" name="website" tabindex="-1" autocomplete="off"
+                   style="position:absolute; left:-9999px" aria-hidden="true">
+
+            <button class="btn btn--primary lead__submit" type="submit" data-lead-submit>Свяжитесь со мной</button>
+          </form>
+
+          <!--
+            Область ответа: aria-live объявляет успех и ошибку, поэтому элемент
+            обязан лежать в DOM заранее — вставленный вместе с текстом живой
+            областью не станет. tabindex="-1": после успеха форма прячется
+            вместе с кнопкой, и фокусу нужно куда-то приземлиться.
+          -->
+          <div class="lead__status" data-lead-status role="status" aria-live="polite" tabindex="-1"></div>
+
+          <p class="lead-fallback">
+            Форму отправляет скрипт, а он у вас отключён. Напишите нам на
+            <a class="link" href="mailto:hello@mopsomania.ru">hello@mopsomania.ru</a> —
+            ответим тем же днём.
           </p>
-        </header>
-
-        <div class="grid grid--4" data-stagger>
-          <article class="card reveal">
-            <h3 class="card__title">Характер</h3>
-            <p class="card__text">
-              Дружелюбный и ненавязчивый. Мопс плохо переносит одиночество и предпочитает
-              находиться рядом с человеком, а не охранять территорию.
-            </p>
-          </article>
-
-          <article class="card reveal">
-            <h3 class="card__title">Размер</h3>
-            <p class="card__text">
-              Рост в холке 25–30 см, вес 6–8 кг. Компактный, но плотный и мускулистый —
-              это не хрупкая декоративная собака.
-            </p>
-          </article>
-
-          <article class="card reveal">
-            <h3 class="card__title">Продолжительность жизни</h3>
-            <p class="card__text">
-              В среднем 12–15 лет. При контроле веса и регулярных осмотрах у ветеринара
-              мопсы часто доживают до верхней границы.
-            </p>
-          </article>
-
-          <article class="card reveal">
-            <h3 class="card__title">Отношение к детям</h3>
-            <p class="card__text">
-              Терпеливы и не агрессивны, хорошо ладят с детьми. Но игры стоит контролировать:
-              выпуклые глаза мопса легко травмировать.
-            </p>
-          </article>
         </div>
       </div>
     </section>
 
-    <!-- ============ УХОД ============ -->
-    <section class="section section--alt" id="care" data-nav-section="care">
+    <!-- ============ АНОНСЫ РАЗДЕЛОВ ============
+         Порядок и тексты берутся из того же списка SECTIONS, что и меню:
+         добавить раздел в одном месте — и он появится и здесь, и в шапке. -->
+    <section class="section">
       <div class="container">
-        <header class="section__head reveal">
-          <h2 class="section__title">Уход</h2>
-          <p class="section__lead">
-            Мопс неприхотлив в быту, но у породы есть несколько обязательных ежедневных ритуалов.
-          </p>
-        </header>
-
-        <div class="grid grid--3" data-stagger>
-          <article class="card card--icon reveal">
-            <span class="card__icon" aria-hidden="true">
+        <div class="teasers" data-stagger>
+          <article class="teaser reveal">
+            <span class="teaser__icon" aria-hidden="true">
               <svg class="icon" viewBox="0 0 24 24" focusable="false">
                 <circle cx="12" cy="12" r="9"/>
                 <path d="M7.5 9.5c1.6 1.1 3.4 1.1 5 0M6.5 13c2 1.4 5 1.4 7 0M9 16.8c1.6.8 3.4.8 5 0"/>
               </svg>
             </span>
-            <h3 class="card__title">Складки на морде</h3>
-            <p class="card__text">
-              Протирайте влажной салфеткой без спирта 2–3 раза в неделю и обязательно
-              насухо вытирайте. Влага в складке — прямой путь к воспалению.
-            </p>
+            <h2 class="teaser__title">
+              <a class="teaser__link" href="about/">О породе</a>
+            </h2>
+            <p class="teaser__text">Мопсы выведены в Китае более двух тысяч лет назад как собаки-компаньоны — и с тех пор их главная работа не изменилась.</p>
+            <span class="teaser__more" aria-hidden="true">
+              Подробнее
+              <svg class="icon teaser__arrow" viewBox="0 0 24 24" focusable="false">
+                <path d="M5 12h13M13 6l6 6-6 6"/>
+              </svg>
+            </span>
           </article>
 
-          <article class="card card--icon reveal">
-            <span class="card__icon" aria-hidden="true">
+          <article class="teaser reveal">
+            <span class="teaser__icon" aria-hidden="true">
+              <svg class="icon" viewBox="0 0 24 24" focusable="false">
+                <rect x="4.5" y="3.5" width="15" height="17" rx="2"/>
+                <path d="M8 9.2l1.6 1.6 3.2-3.4M8 15.7l1.6 1.6 3.2-3.4"/>
+              </svg>
+            </span>
+            <h2 class="teaser__title">
+              <a class="teaser__link" href="choose/">Выбор</a>
+            </h2>
+            <p class="teaser__text">Честный разбор: кому мопс подойдёт, кому противопоказан, сколько стоит содержание и где брать щенка.</p>
+            <span class="teaser__more" aria-hidden="true">
+              Подробнее
+              <svg class="icon teaser__arrow" viewBox="0 0 24 24" focusable="false">
+                <path d="M5 12h13M13 6l6 6-6 6"/>
+              </svg>
+            </span>
+          </article>
+
+          <article class="teaser reveal">
+            <span class="teaser__icon" aria-hidden="true">
               <svg class="icon" viewBox="0 0 24 24" focusable="false">
                 <path d="M3 7.5c2-2.4 4.5-2.4 6.5 0s4.5 2.4 6.5 0 4-1.6 5 0M3 12.5c2-2.4 4.5-2.4 6.5 0s4.5 2.4 6.5 0 4-1.6 5 0M3 17.5c2-2.4 4.5-2.4 6.5 0s4.5 2.4 6.5 0 4-1.6 5 0"/>
               </svg>
             </span>
-            <h3 class="card__title">Шерсть</h3>
-            <p class="card__text">
-              Мопсы линяют круглый год. Вычёсывайте резиновой щёткой раз в неделю,
-              в период сезонной линьки — через день. Купать достаточно раз в месяц.
-            </p>
-          </article>
-
-          <article class="card card--icon reveal">
-            <span class="card__icon" aria-hidden="true">
-              <svg class="icon" viewBox="0 0 24 24" focusable="false">
-                <ellipse cx="7" cy="9" rx="2" ry="2.6"/>
-                <ellipse cx="12" cy="7.2" rx="2" ry="2.8"/>
-                <ellipse cx="17" cy="9" rx="2" ry="2.6"/>
-                <path d="M12 12c3 0 5 2.2 5 4.4S15 20 12 20s-5-1.4-5-3.6S9 12 12 12z"/>
+            <h2 class="teaser__title">
+              <a class="teaser__link" href="care/">Уход</a>
+            </h2>
+            <p class="teaser__text">Мопс неприхотлив в быту, но у породы есть несколько обязательных ежедневных ритуалов.</p>
+            <span class="teaser__more" aria-hidden="true">
+              Подробнее
+              <svg class="icon teaser__arrow" viewBox="0 0 24 24" focusable="false">
+                <path d="M5 12h13M13 6l6 6-6 6"/>
               </svg>
             </span>
-            <h3 class="card__title">Когти</h3>
-            <p class="card__text">
-              Стригите когтерезом раз в 3–4 недели. Отросшие когти меняют постановку лап
-              и со временем приводят к проблемам с суставами.
-            </p>
           </article>
 
-          <article class="card card--icon reveal">
-            <span class="card__icon" aria-hidden="true">
+          <article class="teaser reveal">
+            <span class="teaser__icon" aria-hidden="true">
               <svg class="icon" viewBox="0 0 24 24" focusable="false">
-                <path d="M15.5 3.5c-4.2 0-7.5 3.8-7.5 8.5 0 4 2 7.5 5 7.5 3.6 0 5.5-4.6 5.5-9.5 0-3.4-1-6.5-3-6.5z"/>
-                <path d="M11.5 12.5c.8-1.4 2.2-1.4 3 0"/>
+                <path d="M12 3.5 21 19H3z"/>
+                <path d="M12 10v4M12 16.5v.5"/>
               </svg>
             </span>
-            <h3 class="card__title">Уши</h3>
-            <p class="card__text">
-              Осматривайте еженедельно. Висячая форма уха плохо проветривается,
-              поэтому сера и влага скапливаются быстрее, чем у стоячих ушей.
-            </p>
+            <h2 class="teaser__title">
+              <a class="teaser__link" href="health/">Здоровье</a>
+            </h2>
+            <p class="teaser__text">Мопс — брахицефал: у него укороченный череп и суженные дыхательные пути. Это определяет почти все риски породы.</p>
+            <span class="teaser__more" aria-hidden="true">
+              Подробнее
+              <svg class="icon teaser__arrow" viewBox="0 0 24 24" focusable="false">
+                <path d="M5 12h13M13 6l6 6-6 6"/>
+              </svg>
+            </span>
           </article>
 
-          <article class="card card--icon reveal">
-            <span class="card__icon" aria-hidden="true">
+          <article class="teaser reveal">
+            <span class="teaser__icon" aria-hidden="true">
               <svg class="icon" viewBox="0 0 24 24" focusable="false">
-                <path d="M6.5 4h11a1.5 1.5 0 0 1 1.5 1.5v5c0 3.2-1.6 9.5-3.2 9.5-1.5 0-1.8-4.2-3.8-4.2s-2.3 4.2-3.8 4.2C6.6 20 5 13.7 5 10.5v-5A1.5 1.5 0 0 1 6.5 4z"/>
+                <rect x="3" y="5" width="18" height="14" rx="2"/>
+                <path d="M3 15.5l5-4 4 3 3-2 6 4.5"/>
+                <circle cx="8.4" cy="9.6" r="1.3"/>
               </svg>
             </span>
-            <h3 class="card__title">Зубы</h3>
-            <p class="card__text">
-              Чистите специальной пастой 2–3 раза в неделю. Из-за укороченной челюсти
-              зубы стоят тесно, и налёт образуется заметно быстрее.
-            </p>
-          </article>
-
-          <article class="card card--icon reveal">
-            <span class="card__icon" aria-hidden="true">
-              <svg class="icon" viewBox="0 0 24 24" focusable="false">
-                <circle cx="7" cy="17" r="3.2"/>
-                <path d="M10.2 15.2c3-1 4.3-3.2 4.3-6.2A4.3 4.3 0 0 1 18.8 4.7"/>
-                <circle cx="18.8" cy="4.7" r="1.6"/>
+            <h2 class="teaser__title">
+              <a class="teaser__link" href="gallery/">Галерея</a>
+            </h2>
+            <p class="teaser__text">Мопсы бывают палевыми, абрикосовыми, серебристыми и чёрными — но выражение морды у всех одинаково внимательное.</p>
+            <span class="teaser__more" aria-hidden="true">
+              Подробнее
+              <svg class="icon teaser__arrow" viewBox="0 0 24 24" focusable="false">
+                <path d="M5 12h13M13 6l6 6-6 6"/>
               </svg>
             </span>
-            <h3 class="card__title">Прогулки</h3>
-            <p class="card__text">
-              Два раза в день по 20–30 минут в спокойном темпе. В жару выходите рано утром
-              и поздно вечером — мопс не умеет эффективно охлаждаться дыханием.
-            </p>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- ============ ЗДОРОВЬЕ ============ -->
-    <section class="section" id="health" data-nav-section="health">
+    <!-- ============ КОРОТКО О ПОРОДЕ ============ -->
+    <section class="section section--alt">
       <div class="container">
-        <header class="section__head reveal">
-          <h2 class="section__title">Здоровье</h2>
-          <p class="section__lead">
-            Мопс — брахицефал: у него укороченный череп и суженные дыхательные пути.
-            Это определяет почти все риски породы, и знать их нужно до покупки щенка.
-          </p>
-        </header>
-
-        <div class="callout reveal">
-          <h3 class="callout__title">
-            <svg class="icon callout__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d="M12 3.5 21 19H3z"/>
-              <path d="M12 10v4M12 16.5v.5"/>
-            </svg>
-            Требует постоянного внимания
-          </h3>
-
-          <ul class="callout__list" data-stagger>
-            <li class="reveal">
-              <strong>Брахицефальный синдром.</strong> Шумное дыхание, храп и одышка —
-              не милая особенность, а симптом. При заметном сопении в покое нужен осмотр врача.
-            </li>
-            <li class="reveal">
-              <strong>Перегрев.</strong> Собака охлаждается через дыхание, а у мопса оно
-              затруднено. Выше +25 °C прогулки сокращают, а в машине собаку не оставляют никогда.
-            </li>
-            <li class="reveal">
-              <strong>Глаза.</strong> Выпуклые и слабо защищённые. Опасны сухие ветки,
-              трава и игры с крупными собаками; покраснение — повод к врачу в тот же день.
-            </li>
-            <li class="reveal">
-              <strong>Лишний вес.</strong> Мопсы легко полнеют, а каждый лишний килограмм
-              усиливает нагрузку на дыхание и суставы. Порции взвешивают, лакомства считают.
-            </li>
-            <li class="reveal">
-              <strong>Позвоночник.</strong> Из-за строения позвонков нежелательны прыжки
-              с высоты — с дивана и из машины собаку лучше снимать на руках.
-            </li>
-          </ul>
-
-          <p class="callout__note">
-            Материал носит справочный характер и не заменяет консультацию ветеринарного врача.
-          </p>
-        </div>
+        <h2 class="facts__heading reveal">Коротко о породе</h2>
+        <dl class="facts" data-stagger>
+          <div class="fact reveal">
+            <dt class="fact__label">Рост в холке</dt>
+            <dd class="fact__value">25–30 см</dd>
+          </div>
+          <div class="fact reveal">
+            <dt class="fact__label">Вес</dt>
+            <dd class="fact__value">6–8 кг</dd>
+          </div>
+          <div class="fact reveal">
+            <dt class="fact__label">Продолжительность жизни</dt>
+            <dd class="fact__value">12–15 лет</dd>
+          </div>
+          <div class="fact reveal">
+            <dt class="fact__label">Характер</dt>
+            <dd class="fact__value">Дружелюбный и ненавязчивый</dd>
+          </div>
+        </dl>
       </div>
     </section>
 
-    <!-- ============ ГАЛЕРЕЯ ============ -->
-    <section class="section section--alt" id="gallery" data-nav-section="gallery">
+    <!-- ============ НЕОТЛОЖНОЕ ============
+         Единственное намеренное дублирование с health/: информация
+         неотложная, и до неё не должно быть лишнего перехода. -->
+    <section class="section">
       <div class="container">
-        <header class="section__head reveal">
-          <h2 class="section__title">Галерея</h2>
-          <p class="section__lead">
-            Мопсы бывают палевыми, абрикосовыми, серебристыми и чёрными — но выражение морды
-            у всех одинаково внимательное.
-          </p>
-        </header>
-
         <!--
-          Снимков ровно шесть: сетка делится нацело и на 2 колонки, и на 3,
-          поэтому последний ряд не остаётся с одиночным кадром (см. CSS галереи).
-          width/height — настоящие размеры файлов; в квадрат их приводит CSS
-          через aspect-ratio и object-fit: cover.
+          Подраздел, а не пункт меню: на него ведёт ссылка «Когда срочно к врачу»
+          из подвала. В scrollspy он намеренно не участвует.
         -->
-        <div class="gallery" data-stagger>
-          <figure class="gallery__item reveal">
-            <img src="assets/mops/pug-1.jpg" alt="Палевый мопс крупным планом смотрит в камеру снизу вверх" width="736" height="920" loading="lazy">
-          </figure>
-          <figure class="gallery__item reveal">
-            <img src="assets/mops/pug-2.jpg" alt="Мопс с седеющей мордой, снятый сверху, широко раскрыл пасть" width="735" height="888" loading="lazy">
-          </figure>
-          <figure class="gallery__item reveal">
-            <img src="assets/mops/pug-3.jpg" alt="Мопс сидит на руках у хозяина вечером на улице" width="736" height="735" loading="lazy">
-          </figure>
-          <figure class="gallery__item reveal">
-            <img src="assets/mops/pug-4.jpg" alt="Щенок мопса чёрного окраса крупным планом" width="720" height="960" loading="lazy">
-          </figure>
-          <figure class="gallery__item reveal">
-            <img src="assets/mops/pug-5.jpg" alt="Щенок мопса серебристого окраса стоит на гравийной дорожке" width="399" height="468" loading="lazy">
-          </figure>
-          <figure class="gallery__item reveal">
-            <img src="assets/mops/pug-6.jpg" alt="Светлый мопс сидит в кресле, повернув голову в сторону" width="455" height="623" loading="lazy">
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ FAQ ============ -->
-    <section class="section" id="faq" data-nav-section="faq">
-      <div class="container container--narrow">
-        <header class="section__head reveal">
-          <h2 class="section__title">Частые вопросы</h2>
-        </header>
-
-        <div class="faq" data-stagger>
-          <details class="faq__item reveal">
-            <summary class="faq__question">
-              Сколько живут мопсы?
-              <svg class="icon faq__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M6 9.5l6 6 6-6"/>
-              </svg>
-            </summary>
-            <div class="faq__body">
-              <div class="faq__body-inner">
-                <p>
-                  В среднем 12–15 лет. Основные факторы, которые сокращают этот срок, —
-                  лишний вес и запущенные проблемы с дыханием, а не возраст сам по себе.
-                </p>
-              </div>
-            </div>
-          </details>
-
-          <details class="faq__item reveal">
-            <summary class="faq__question">
-              Сильно ли мопсы линяют?
-              <svg class="icon faq__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M6 9.5l6 6 6-6"/>
-              </svg>
-            </summary>
-            <div class="faq__body">
-              <div class="faq__body-inner">
-                <p>
-                  Да, и круглый год — это одна из главных бытовых особенностей породы.
-                  Короткая шерсть заметна на тёмной одежде и мебели. Регулярное вычёсывание
-                  снижает количество шерсти в доме, но не убирает её полностью.
-                </p>
-              </div>
-            </div>
-          </details>
-
-          <details class="faq__item reveal">
-            <summary class="faq__question">
-              Подходит ли мопс для квартиры?
-              <svg class="icon faq__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M6 9.5l6 6 6-6"/>
-              </svg>
-            </summary>
-            <div class="faq__body">
-              <div class="faq__body-inner">
-                <p>
-                  Да, это одна из самых «квартирных» пород: мопсу не нужны длительные нагрузки,
-                  он мало лает и спокойно проводит день дома. Учитывайте только храп во сне —
-                  для чуткого сна хозяина это может быть проблемой.
-                </p>
-              </div>
-            </div>
-          </details>
-
-          <details class="faq__item reveal">
-            <summary class="faq__question">
-              Как мопсы переносят жару?
-              <svg class="icon faq__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M6 9.5l6 6 6-6"/>
-              </svg>
-            </summary>
-            <div class="faq__body">
-              <div class="faq__body-inner">
-                <p>
-                  Плохо. Строение носоглотки мешает охлаждаться дыханием, поэтому тепловой удар
-                  наступает быстрее, чем у других пород. Летом гуляйте по прохладе, берите воду
-                  и следите за отдышкой — при ней прогулку нужно прекратить.
-                </p>
-              </div>
-            </div>
-          </details>
-
-          <details class="faq__item reveal">
-            <summary class="faq__question">
-              Легко ли дрессировать мопса?
-              <svg class="icon faq__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M6 9.5l6 6 6-6"/>
-              </svg>
-            </summary>
-            <div class="faq__body">
-              <div class="faq__body-inner">
-                <p>
-                  Мопс сообразителен, но упрям и быстро теряет интерес к повторам. Занятия
-                  должны быть короткими и на положительном подкреплении: жёсткие методы
-                  порода переносит плохо и просто перестаёт сотрудничать.
-                </p>
-              </div>
-            </div>
-          </details>
+        <div class="emergency reveal" id="emergency">
+          <h2 class="emergency__title">
+            <svg class="icon emergency__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 7.5v5M12 16v.5"/>
+            </svg>
+            Когда к врачу немедленно
+          </h2>
+          <ul class="emergency__list">
+            <li>Затруднённое или хрипящее дыхание в покое.</li>
+            <li>Синюшность языка или дёсен.</li>
+            <li>Отказ двигаться и вялость в жару.</li>
+            <li>Обильное слюнотечение вместе с одышкой.</li>
+            <li>Травма или помутнение глаза.</li>
+          </ul>
+          <p class="emergency__note">Не ждите утра и не давайте лекарств на своё усмотрение — везите к врачу.</p>
         </div>
       </div>
     </section>
@@ -498,14 +395,14 @@
 
         <!-- Колонка 1: о проекте. На мобильных не сворачивается -->
         <div class="footer__col reveal">
-          <a class="logo" href="#top">
+          <a class="logo" href="./">
             <span class="logo__mark" aria-hidden="true">
               <svg class="logo__paw" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
-                <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
-                <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
-                <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
-                <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+                        <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                        <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                        <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                        <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
               </svg>
             </span>
             <span>Мопсомания</span>
@@ -519,8 +416,13 @@
           </p>
         </div>
 
-        <!-- Колонки 2 и 3: до 768px это нативный аккордеон, выше — обычные заголовки -->
-        <details class="footer__col footer__group reveal" data-footer-accordion>
+        <!--
+          Колонки 2 и 3: до 768px это нативный аккордеон, выше — обычные заголовки.
+          open стоит в разметке, а не ставится из JS: без скриптов колонки должны
+          быть раскрыты, иначе девять ссылок подвала недостижимы. Сворачивает их
+          на мобильном initFooterAccordion().
+        -->
+        <details class="footer__col footer__group reveal" data-footer-accordion open>
           <summary class="footer__summary">
             <h3 class="footer__title">Разделы</h3>
             <svg class="icon footer__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -528,15 +430,15 @@
             </svg>
           </summary>
           <ul class="footer__list">
-            <li><a class="footer__link" href="#about" data-nav-link="about">О породе</a></li>
-            <li><a class="footer__link" href="#care" data-nav-link="care">Уход</a></li>
-            <li><a class="footer__link" href="#health" data-nav-link="health">Здоровье</a></li>
-            <li><a class="footer__link" href="#gallery" data-nav-link="gallery">Галерея</a></li>
-            <li><a class="footer__link" href="#faq" data-nav-link="faq">Вопросы</a></li>
+            <li><a class="footer__link" href="about/" data-nav-link="about">О породе</a></li>
+            <li><a class="footer__link" href="choose/" data-nav-link="choose">Выбор</a></li>
+            <li><a class="footer__link" href="care/" data-nav-link="care">Уход</a></li>
+            <li><a class="footer__link" href="health/" data-nav-link="health">Здоровье</a></li>
+            <li><a class="footer__link" href="gallery/" data-nav-link="gallery">Галерея</a></li>
           </ul>
         </details>
 
-        <details class="footer__col footer__group footer__col--wide reveal" data-footer-accordion>
+        <details class="footer__col footer__group footer__col--wide reveal" data-footer-accordion open>
           <summary class="footer__summary">
             <h3 class="footer__title">Полезное</h3>
             <svg class="icon footer__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -544,11 +446,11 @@
             </svg>
           </summary>
           <ul class="footer__list">
-            <li><a class="footer__link" href="#care">Чек-лист по уходу</a></li>
-            <li><a class="footer__link" href="#health">Календарь прививок</a></li>
-            <li><a class="footer__link" href="#health">Мопс в жару</a></li>
+            <li><a class="footer__link" href="care/#checklist">Чек-лист по уходу</a></li>
+            <li><a class="footer__link" href="health/#vaccination">Календарь прививок</a></li>
+            <li><a class="footer__link" href="care/#heat">Мопс в жару</a></li>
             <li>
-              <a class="footer__link footer__link--urgent" href="#health">
+              <a class="footer__link footer__link--urgent" href="health/#emergency">
                 <svg class="icon footer__urgent-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                   <circle cx="12" cy="12" r="9"/>
                   <path d="M12 7.5v5M12 16v.5"/>
