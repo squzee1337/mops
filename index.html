@@ -171,11 +171,16 @@
 
          Отправку целиком ведёт initLeadForm(); без скриптов вместо формы
          показывается адрес почты (.lead-fallback). -->
-    <section class="section section--alt">
+    <!-- id на секции, а не на заголовке: заголовок лежит внутри .tool
+         с классом .reveal и до появления блока смещён вниз на 24px.
+         Браузер прокручивает к смещённому положению, анимация сдвиг
+         убирает — и заголовок уезжает ровно на эти 24px под шапку.
+         У секции трансформации нет, ссылка из подвала попадает точно. -->
+    <section class="section section--alt" id="contact">
       <div class="container">
         <div class="tool reveal">
           <p class="tool__badge">Заявка</p>
-          <h2 class="tool__title" id="contact">Остались вопросы о породе?</h2>
+          <h2 class="tool__title">Остались вопросы о породе?</h2>
           <p class="tool__lead">Оставьте имя и телефон — перезвоним и спокойно разберём, подойдёт ли вам мопс. Без рассылок и звонков с предложениями.</p>
 
           <form class="lead" data-lead-form novalidate>
@@ -310,11 +315,53 @@
           </article>
 
           <article class="teaser reveal">
+            <!--
+              Единственный анонс с анимированной иконкой: при наведении на
+              карточку из папки веером выезжают три снимка. Сцена инлайновая,
+              а не внешним файлом, — иначе hover родителя до неё не достаёт.
+              Все состояния на CSS, скрипты сюда не заходят. Порядок фигур
+              обязателен: задняя стенка → снимки → передняя стенка, она
+              прячет их нижний край. Лапа внутри снимка — та же, что
+              в логотипе и маркерах «Коротко», в три тона.
+            -->
             <span class="teaser__icon" aria-hidden="true">
-              <svg class="icon" viewBox="0 0 24 24" focusable="false">
-                <rect x="3" y="5" width="18" height="14" rx="2"/>
-                <path d="M3 15.5l5-4 4 3 3-2 6 4.5"/>
-                <circle cx="8.4" cy="9.6" r="1.3"/>
+              <svg class="gallery-icon" viewBox="0 0 64 64" focusable="false">
+                <path class="gallery-icon__back" d="M13 20h11.5a3 3 0 0 1 2.4 1.2l1.9 2.5H51a4 4 0 0 1 4 4V47a4 4 0 0 1-4 4H13a4 4 0 0 1-4-4V24a4 4 0 0 1 4-4z"/>
+
+                <g class="gallery-icon__photo gallery-icon__photo--left">
+                  <rect class="gallery-icon__frame" x="23" y="20" width="18" height="22" rx="2"/>
+                  <g class="gallery-icon__paw gallery-icon__paw--gold" transform="translate(26.6 22.5) scale(.45)">
+                    <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
+                    <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                    <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                    <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                    <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+                  </g>
+                </g>
+
+                <g class="gallery-icon__photo gallery-icon__photo--right">
+                  <rect class="gallery-icon__frame" x="23" y="20" width="18" height="22" rx="2"/>
+                  <g class="gallery-icon__paw gallery-icon__paw--muted" transform="translate(26.6 22.5) scale(.45)">
+                    <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
+                    <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                    <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                    <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                    <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+                  </g>
+                </g>
+
+                <g class="gallery-icon__photo gallery-icon__photo--mid">
+                  <rect class="gallery-icon__frame" x="23" y="20" width="18" height="22" rx="2"/>
+                  <g class="gallery-icon__paw gallery-icon__paw--rose" transform="translate(26.6 22.5) scale(.45)">
+                    <ellipse cx="6.5" cy="10.6" rx="2.15" ry="2.75"/>
+                    <ellipse cx="10.4" cy="7.3" rx="2.25" ry="2.95"/>
+                    <ellipse cx="14.9" cy="7.5" rx="2.2" ry="2.9"/>
+                    <ellipse cx="18.5" cy="11" rx="2.05" ry="2.6"/>
+                    <ellipse cx="12.4" cy="16.8" rx="5.3" ry="4.3"/>
+                  </g>
+                </g>
+
+                <rect class="gallery-icon__front" x="9" y="29" width="46" height="22" rx="5"/>
               </svg>
             </span>
             <h2 class="teaser__title">
@@ -449,6 +496,7 @@
             <li><a class="footer__link" href="care/#checklist">Чек-лист по уходу</a></li>
             <li><a class="footer__link" href="health/#vaccination">Календарь прививок</a></li>
             <li><a class="footer__link" href="care/#heat">Мопс в жару</a></li>
+            <li><a class="footer__link" href="#contact">Оставить заявку</a></li>
             <li>
               <a class="footer__link footer__link--urgent" href="health/#emergency">
                 <svg class="icon footer__urgent-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
